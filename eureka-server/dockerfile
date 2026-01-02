@@ -1,0 +1,15 @@
+FROM eclipse-temurin:17-jdk-alpine AS build
+WORKDIR /app
+COPY eureka-server/.mvn/ .mvn
+COPY eureka-server/mvnw eureka-server/pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY eureka-server/src ./src
+RUN ./mvnw clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+EXPOSE 8761
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

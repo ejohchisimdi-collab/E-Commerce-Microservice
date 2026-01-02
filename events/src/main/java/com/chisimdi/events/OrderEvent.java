@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class OrderEvent {
     private String id;
+    private int orderId;
     private int userId;
     private int accountId;
     private Location location;
@@ -11,7 +12,9 @@ public class OrderEvent {
     private BigDecimal totalPrice;
     private String productName;
 
-    public OrderEvent(String id, int userId,int accountId,Location location,int amount,BigDecimal totalPrice, String productName){
+    public OrderEvent(){}
+
+    public OrderEvent(String id, int orderId, int userId, int accountId, Location location, int amount, BigDecimal totalPrice, String productName){
         this.id=id;
         this.userId=userId;
         this.accountId=accountId;
@@ -19,10 +22,15 @@ public class OrderEvent {
         this.amount=amount;
         this.totalPrice=totalPrice;
         this.productName=productName;
+        this.orderId=orderId;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setUserId(int userId) {
@@ -71,5 +79,13 @@ public class OrderEvent {
 
     public String getProductName() {
         return productName;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

@@ -1,0 +1,32 @@
+FROM maven:3.8.8-eclipse-temurin-17-alpine AS build
+WORKDIR /build
+
+# Copy parent POM first
+COPY pom.xml ./
+
+# Copy and build events module FIRST
+COPY events/pom.xml ./events/
+COPY events/src ./events/src
+WORKDIR /build/events
+RUN mvn clean install -DskipTests
+
+# Verify the JAR was created
+RUN ls -la /root/.m2/repository/com/chisimdi/events/0.0.1-SNAPSHOT/ || echo "Events JAR not found!"
+
+# Now build finance-service
+WORKDIR /build
+COPY finance-service/pom.xml ./finance-service/
+COPY finance-service/src ./finance-service/src
+WORKDIR /build/finance-service
+
+# Update dependencies and build
+RUN mvn dependency:resolve -U
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /build/finance-service/target/*.jar app.jar
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
