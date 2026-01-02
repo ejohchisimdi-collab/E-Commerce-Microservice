@@ -10,9 +10,7 @@
             margin: 0;
             padding: 0;
         }
-        .swagger-ui .topbar {
-            display: none;
-        }
+        
     </style>
 </head>
 <body>
@@ -22,15 +20,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.5/swagger-ui-standalone-preset.min.js"></script>
     <script>
         window.onload = function() {
-            // Initialize Swagger UI
             const ui = SwaggerUIBundle({
-                // Point to your API docs file
-                url: "./api-docs.json",
-                
-                // Alternative: If you want to load from a different branch or path
-                // url: "https://raw.githubusercontent.com/yourusername/your-repo/main/api-docs.json",
-                
                 dom_id: '#swagger-ui',
+        
+                urls: [
+                    { name: "finance-service", url: "./finance-service-api-docs.json" },
+                     { name: "order-service",   url: "./order-service-api-docs.json" },
+                    { name: "product-Service", url: "./product-service-api-docs.json" },
+                    { name: "user-Service",    url: "./user-service-api-docs.json" },
+                   
+                ],
+                urlsPrimaryName: "Finance Service",
+        
                 deepLinking: true,
                 presets: [
                     SwaggerUIBundle.presets.apis,
@@ -40,18 +41,13 @@
                     SwaggerUIBundle.plugins.DownloadUrl
                 ],
                 layout: "StandaloneLayout",
-                
-                // Additional configurations
-                defaultModelsExpandDepth: 1,
-                defaultModelExpandDepth: 1,
                 docExpansion: "list",
-                filter: true,
-                showRequestHeaders: true,
-                supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch', 'head', 'options']
+                filter: true
             });
-
+        
             window.ui = ui;
         };
-    </script>
+        </script>
+        
 </body>
 </html>
